@@ -18,7 +18,7 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./ChannelsDVR Log Monitor.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Define volumes
-VOLUME ["/app/logs", "/app/config"]
+VOLUME ["/app/logs", "/app/appsettings.json"]
 
 FROM base AS final
 WORKDIR /app

@@ -33,7 +33,7 @@ static class Program
     private static void ConfigureServices(IServiceCollection services)
     {
         var config = new ConfigurationBuilder()
-            .AddJsonFile("config/appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
 
