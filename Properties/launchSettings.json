@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ChannelsDVR Log Monitor": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
