@@ -7,7 +7,7 @@ a ChannelsDVR log endpoint.  Log records are parsed and compared to user-defined
 alert rules.  If a match is found, the log records in question are collected and 
 the user is notified via email.
 
-The application is containerized and expects the user to mount an **appsettings.json** file
+The application is [containerized](https://hub.docker.com/r/kman0/channelsdvr-log-monitor) and expects the user to mount an **appsettings.json** file
 for configuration.
 
 Optionally, you may also provide a mount for the logs (with appropriate write permissions) 
