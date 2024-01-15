@@ -7,8 +7,20 @@ a ChannelsDVR log endpoint.  Log records are parsed and compared to user-defined
 alert rules.  If a match is found, the log records in question are collected and 
 the user is notified via email.
 
-The application is containerized and configured through the **/config/appsettings.json** 
-file with the following settings:
+The application is containerized and expects the user to mount the following:
+1. `/app/logs` should be mounted to a folder if you want access to the logs
+2. `appsettings.json` should be mounted to your own customized appsettings.json file.
+
+Example mount command:
+
+`docker run -d -v /path/to/logs:/app/logs -v /path/to/appsettings.json:/app/appsettings.json channelsdvr-log-monitor:v1`
+
+All application configuration is handled through the **/config/appsettings.json**.
+A default copy is available in the root of this repository.  Copy it to your desired
+location, make the necessary changes, and mount it when you run the container. 
+
+
+The **appsettings.json** has the following settings
 
 - `PollingIntervalMinutes`: The interval in minutes at which the log monitor polls for new log entries.
 
@@ -31,5 +43,3 @@ Configure the SMTP server details and email addresses for sending notifications.
   - `Contains`: desired description contains text
   - `NotContains`: desired description does not contain text
   - `Regex`: desired description matches regex pattern
-
-An application log is also available at **/logs/app\*.txt**
