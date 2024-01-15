@@ -7,15 +7,17 @@ a ChannelsDVR log endpoint.  Log records are parsed and compared to user-defined
 alert rules.  If a match is found, the log records in question are collected and 
 the user is notified via email.
 
-The application is containerized and expects the user to mount the following:
-1. `/app/logs` should be mounted to a folder if you want access to the logs
-2. `appsettings.json` should be mounted to your own customized appsettings.json file.
+The application is containerized and expects the user to mount an **appsettings.json** file
+for configuration.
+
+Optionally, you may also provide a mount for the logs (with appropriate write permissions) 
+via `/app/logs`.
 
 Example mount command:
 
-`docker run -d -v /path/to/logs:/app/logs -v /path/to/appsettings.json:/app/appsettings.json channelsdvr-log-monitor:v1`
+`docker run -d -v /path/to/appsettings.json:/app/appsettings.json channelsdvr-log-monitor:latest`
 
-All application configuration is handled through the **/config/appsettings.json**.
+All application configuration is handled through the **appsettings.json** file.
 A default copy is available in the root of this repository.  Copy it to your desired
 location, make the necessary changes, and mount it when you run the container. 
 
