@@ -1,15 +1,15 @@
-﻿using ChannelsDVR_Log_Monitor.Models;
+﻿using ChannelsDVR_Log_Monitor.Models.Config;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Serilog;
 
-namespace ChannelsDVR_Log_Monitor.Services;
+namespace ChannelsDVR_Log_Monitor.Services.Notifications;
 
-public class EmailService(IOptions<AppConfig> appConfig) : IEmailService
+public class EmailNotificationService(IOptions<AppConfig> appConfig) : INotificationService
 {
-    public async Task SendEmailAsync(string body)
+    public async Task SendNotificationAsync(string body)
     {
         try
         {

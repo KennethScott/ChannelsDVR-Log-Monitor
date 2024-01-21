@@ -1,44 +1,51 @@
-﻿using ChannelsDVR_Log_Monitor.Models;
-using ChannelsDVR_Log_Monitor.Services;
-using Microsoft.Extensions.Options;
+﻿using ChannelsDVR_Log_Monitor.Services.ChannelsLogs;
+using ChannelsDVR_Log_Monitor.Services.Notifications;
 using Serilog;
 
 namespace ChannelsDVR_Log_Monitor;
 
-public class App(
-    IOptionsSnapshot<AppConfig> appConfig,
-    IChannelsLogService logService,
-    IEmailService emailService
-)
+public class App
 {
+    private readonly IChannelsLogService _channelsLogService;
+    private readonly NotificationHandler _notificationHandler;
+
+    public App(IChannelsLogService channelsLogService, NotificationHandler notificationHandler)
+    {
+        _channelsLogService = channelsLogService;
+        _notificationHandler = notificationHandler;
+
+        // Subscribe the notification handler to the log service's event
+        _channelsLogService.OnNewLogs += async (_, logs) =>
+        {
+            try
+            {
+                await _notificationHandler.HandleNewLogsAsync(logs);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error handling new logs: {ex}");
+            }
+        };
+    }
+
     public async Task RunAsync(CancellationToken cancellationToken)
     {
         try
         {
-            Log.Information("Begin polling...");
+            Log.Information("Initializing log service...");
+            await _channelsLogService.InitializeAsync();
 
+            Log.Information("Application started.");
+
+            // Keep the application running until a cancellation is requested
             while (!cancellationToken.IsCancellationRequested)
             {
-                var pollingInterval = TimeSpan.FromMinutes(appConfig.Value.PollingIntervalMinutes);
-                var logRecs = await logService.GetLogsAsync();
-
-                if (logRecs.Count > 0)
-                {
-                    Log.Information($"Alerting: {logRecs.Count} log records found!");
-                    var body = string.Join(Environment.NewLine, logRecs);
-                    await emailService.SendEmailAsync(body);
-                }
-
-                try
-                {
-                    await Task.Delay(pollingInterval, cancellationToken);
-                }
-                catch (TaskCanceledException)
-                {
-                    Log.Information("Polling canceled.");
-                    break; // Exit the loop if the operation is cancelled
-                }
+                await Task.Delay(Timeout.Infinite, cancellationToken);
             }
+        }
+        catch (TaskCanceledException)
+        {
+            Log.Information("Application stopping...");
         }
         catch (Exception ex)
         {

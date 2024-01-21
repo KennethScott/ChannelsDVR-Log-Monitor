@@ -1,32 +1,27 @@
 ﻿using System.Text.RegularExpressions;
 using ChannelsDVR_Log_Monitor.Models;
+using ChannelsDVR_Log_Monitor.Models.Config;
+using ChannelsDVR_Log_Monitor.Services.Persistence;
 using Microsoft.Extensions.Options;
 using Serilog;
 
-namespace ChannelsDVR_Log_Monitor.Services;
+namespace ChannelsDVR_Log_Monitor.Services.ChannelsLogs;
 
-public class ChannelsLogService(
-    HttpClient httpClient,
+public abstract class ChannelsLogServiceBase(
     IOptions<AppConfig> appConfig,
     IPersistenceService persistenceService
 ) : IChannelsLogService
 {
-    public async Task<List<string>> GetLogsAsync()
+    public abstract Task InitializeAsync();
+
+    public event EventHandler<List<string>>? OnNewLogs;
+
+    protected void RaiseOnNewLogs(List<string> logs)
     {
-        Log.Debug("Fetching logs from endpoint...");
-
-        var response = await httpClient.GetAsync(appConfig.Value.LogEndpointUrl);
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-
-        Log.Debug("Logs received");
-        var logs = ParseLogs(content);
-
-        return logs;
+        OnNewLogs?.Invoke(this, logs);
     }
 
-    private List<string> ParseLogs(string logRecords)
+    protected List<string> ParseLogs(string logRecords)
     {
         Log.Debug("Parsing log records");
         string? lastProcessedLogId =

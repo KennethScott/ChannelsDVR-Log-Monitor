@@ -1,8 +1,8 @@
-﻿using ChannelsDVR_Log_Monitor.Models;
+﻿using ChannelsDVR_Log_Monitor.Models.Config;
 using LiteDB;
 using Microsoft.Extensions.Options;
 
-namespace ChannelsDVR_Log_Monitor.Services;
+namespace ChannelsDVR_Log_Monitor.Services.Persistence;
 
 public class LiteDbService : IPersistenceService
 {

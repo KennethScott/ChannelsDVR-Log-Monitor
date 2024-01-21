@@ -1,5 +1,8 @@
-﻿using ChannelsDVR_Log_Monitor.Models;
-using ChannelsDVR_Log_Monitor.Services;
+﻿using ChannelsDVR_Log_Monitor.Models.Config;
+using ChannelsDVR_Log_Monitor.Services.Bonjour;
+using ChannelsDVR_Log_Monitor.Services.ChannelsLogs;
+using ChannelsDVR_Log_Monitor.Services.Notifications;
+using ChannelsDVR_Log_Monitor.Services.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -39,12 +42,29 @@ static class Program
 
         Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
 
+        services.AddMemoryCache();
+
+        var appConfig = new AppConfig();
+        config.Bind(appConfig);
         services.Configure<AppConfig>(config);
 
-        services.AddHttpClient<IChannelsLogService, ChannelsLogService>();
-
         services.AddSingleton<IPersistenceService, LiteDbService>();
-        services.AddSingleton<IEmailService, EmailService>();
+        services.AddSingleton<INotificationService, EmailNotificationService>();
+        services.AddSingleton<NotificationHandler>();
+        services.AddSingleton<IBonjourService, ZeroconfService>();
+
+        switch (appConfig.LogMonitoringType)
+        {
+            case LogMonitoringType.File:
+                services.AddSingleton<IChannelsLogService, ChannelsLogFileService>();
+                break;
+            case LogMonitoringType.API:
+                services.AddHttpClient<IChannelsLogService, ChannelsLogHttpService>();
+                break;
+            default:
+                throw new InvalidOperationException("Invalid log monitoring type specified.");
+        }
+
         services.AddSingleton<App>();
     }
 }

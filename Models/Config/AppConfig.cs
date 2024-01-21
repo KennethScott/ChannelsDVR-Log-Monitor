@@ -1,10 +1,12 @@
-﻿namespace ChannelsDVR_Log_Monitor.Models;
+﻿namespace ChannelsDVR_Log_Monitor.Models.Config;
 
 public class AppConfig
 {
-    public int PollingIntervalMinutes { get; set; } = 2;
+    public LogMonitoringType LogMonitoringType { get; set; }
 
-    public string LogEndpointUrl { get; set; } = string.Empty;
+    public LogApiPoller LogApiPoller { get; set; } = new();
+
+    public LogFileWatcher LogFileWatcher { get; set; } = new();
 
     public IEnumerable<AlertRule> AlertRules { get; set; } = Enumerable.Empty<AlertRule>();
 
