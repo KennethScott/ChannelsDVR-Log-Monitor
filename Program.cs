@@ -12,7 +12,7 @@ using static ChannelsDVR_Log_Monitor.Models.Config.Logs;
 
 namespace ChannelsDVR_Log_Monitor;
 
-static class Program
+public class Program
 {
     public static async Task Main()
     {
@@ -40,6 +40,7 @@ static class Program
     {
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddUserSecrets<Program>()
             .AddEnvironmentVariables()
             .Build();
 
