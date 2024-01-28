@@ -9,7 +9,7 @@ namespace ChannelsDVR_Log_Monitor.Services.Notifications;
 
 public class EmailNotificationService(IOptions<AppConfig> appConfig) : INotificationService
 {
-    public async Task SendNotificationAsync(string body)
+    public async Task SendNotificationAsync(string body, string? subject = null)
     {
         try
         {
@@ -18,8 +18,8 @@ public class EmailNotificationService(IOptions<AppConfig> appConfig) : INotifica
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(settings.FromAddress));
             email.To.Add(MailboxAddress.Parse(settings.ToAddress));
-            email.Subject = settings.Subject;
-            email.Body = new TextPart("plain") { Text = body };
+            email.Subject = subject ?? settings.Subject;
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = body };
 
             using var smtpClient = new SmtpClient();
             await smtpClient.ConnectAsync(

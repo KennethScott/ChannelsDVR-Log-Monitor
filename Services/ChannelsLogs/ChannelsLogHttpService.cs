@@ -1,7 +1,6 @@
 ﻿using ChannelsDVR_Log_Monitor.Models.Config;
-using ChannelsDVR_Log_Monitor.Services.Bonjour;
+using ChannelsDVR_Log_Monitor.Services.ChannelsUrl;
 using ChannelsDVR_Log_Monitor.Services.Persistence;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -11,8 +10,7 @@ public class ChannelsLogHttpService(
     HttpClient httpClient,
     IOptions<AppConfig> appConfig,
     IPersistenceService persistenceService,
-    IBonjourService bonjourService,
-    IMemoryCache cache
+    IChannelsUrlService channelsUrlService
 ) : ChannelsLogServiceBase(appConfig, persistenceService)
 {
 #pragma warning disable IDE0052
@@ -21,11 +19,12 @@ public class ChannelsLogHttpService(
 
     public override Task InitializeAsync()
     {
-        var url = GetApiUrl();
+        var baseUrl = channelsUrlService.GetApiUrl();
+        var endUrl = appConfig.Value.Logs.ApiEndpoint;
 
-        var pollingInterval = TimeSpan.FromMinutes(
-            appConfig.Value.LogApiPoller.PollingIntervalMinutes
-        );
+        var url = $"{baseUrl.TrimEnd('/')}/{endUrl.TrimStart('/')}";
+
+        var pollingInterval = TimeSpan.FromMinutes(appConfig.Value.Logs.ApiPollingIntervalMinutes);
 
         _pollingTimer = new Timer(_ => TimerCallback(url), null, TimeSpan.Zero, pollingInterval);
 
@@ -57,61 +56,8 @@ public class ChannelsLogHttpService(
             RaiseOnNewLogs(logs);
         }
 
+        Log.Debug("Finished processing logs");
+
         return logs;
-    }
-
-    private string GetApiUrl()
-    {
-        // Define a unique key for caching the URL
-        const string urlCacheKey = "ApiUrl";
-
-        // Try to get the URL from the cache
-        var cachedUrl = GetUrlFromCache(urlCacheKey);
-        if (!string.IsNullOrEmpty(cachedUrl))
-        {
-            return cachedUrl;
-        }
-
-        // If not in cache, discover the URL synchronously
-        var url = appConfig.Value.LogApiPoller.LogApiUrl;
-        if (string.IsNullOrEmpty(url))
-        {
-            url = Task.Run(
-                    () =>
-                        bonjourService.DiscoverServiceUrlAsync(
-                            appConfig.Value.LogApiPoller.BonjourServiceName
-                        )
-                )
-                .GetAwaiter()
-                .GetResult();
-        }
-
-        if (string.IsNullOrEmpty(url))
-        {
-            Log.Error("Unable to discover ChannelsDVR Url and no LogApiUrl specified.");
-            ArgumentNullException.ThrowIfNull(url);
-        }
-        else
-        {
-            // Cache the discovered URL
-            SetUrlInCache(urlCacheKey, url);
-        }
-
-        return url;
-    }
-
-    private string? GetUrlFromCache(string urlKey)
-    {
-        return cache.Get<string>(urlKey);
-    }
-
-    private void SetUrlInCache(string urlKey, string url)
-    {
-        var cacheEntryOptions = new MemoryCacheEntryOptions
-        {
-            Priority = CacheItemPriority.NeverRemove
-        };
-
-        cache.Set(urlKey, url, cacheEntryOptions);
     }
 }

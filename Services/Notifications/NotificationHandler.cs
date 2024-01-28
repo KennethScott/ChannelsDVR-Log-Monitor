@@ -1,15 +1,17 @@
-﻿namespace ChannelsDVR_Log_Monitor.Services.Notifications;
+﻿using ChannelsDVR_Log_Monitor.Models;
+
+namespace ChannelsDVR_Log_Monitor.Services.Notifications;
 
 public class NotificationHandler(IEnumerable<INotificationService> notificationServices)
 {
-    public async Task HandleNewLogsAsync(List<string> logs)
+    public async Task HandleNewMessagesAsync(NotificationEventArgs eventArgs)
     {
-        if (logs.Count > 0)
+        if (eventArgs.Messages.Count > 0)
         {
-            var message = string.Join(Environment.NewLine, logs);
+            var message = string.Join(Environment.NewLine, eventArgs.Messages);
             foreach (var service in notificationServices)
             {
-                await service.SendNotificationAsync(message);
+                await service.SendNotificationAsync(message, eventArgs.Subject);
             }
         }
     }

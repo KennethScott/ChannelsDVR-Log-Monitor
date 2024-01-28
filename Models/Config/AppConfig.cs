@@ -2,15 +2,15 @@
 
 public class AppConfig
 {
-    public LogMonitoringType LogMonitoringType { get; set; }
+    public string ChannelsDVRServerBaseUrl { get; set; } = string.Empty;
 
-    public LogApiPoller LogApiPoller { get; set; } = new();
+    public string BonjourServiceName { get; set; } = "_channels_dvr._tcp";
 
-    public LogFileWatcher LogFileWatcher { get; set; } = new();
+    public Logs Logs { get; set; } = new();
 
-    public IEnumerable<AlertRule> AlertRules { get; set; } = Enumerable.Empty<AlertRule>();
+    public Devices Devices { get; set; } = new();
 
-    public EmailSettings EmailSettings { get; set; } = new EmailSettings();
+    public EmailSettings EmailSettings { get; set; } = new();
 
     public string DatabasePath { get; set; } = "data/app.db";
 }

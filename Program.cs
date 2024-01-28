@@ -1,11 +1,14 @@
 ﻿using ChannelsDVR_Log_Monitor.Models.Config;
 using ChannelsDVR_Log_Monitor.Services.Bonjour;
+using ChannelsDVR_Log_Monitor.Services.ChannelsDevices;
 using ChannelsDVR_Log_Monitor.Services.ChannelsLogs;
+using ChannelsDVR_Log_Monitor.Services.ChannelsUrl;
 using ChannelsDVR_Log_Monitor.Services.Notifications;
 using ChannelsDVR_Log_Monitor.Services.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using static ChannelsDVR_Log_Monitor.Models.Config.Logs;
 
 namespace ChannelsDVR_Log_Monitor;
 
@@ -52,8 +55,10 @@ static class Program
         services.AddSingleton<INotificationService, EmailNotificationService>();
         services.AddSingleton<NotificationHandler>();
         services.AddSingleton<IBonjourService, ZeroconfService>();
+        services.AddSingleton<IChannelsUrlService, ChannelsUrlService>();
+        services.AddSingleton<IChannelsDevicesService, ChannelsDevicesService>();
 
-        switch (appConfig.LogMonitoringType)
+        switch (appConfig.Logs.MonitoringType)
         {
             case LogMonitoringType.File:
                 services.AddSingleton<IChannelsLogService, ChannelsLogFileService>();

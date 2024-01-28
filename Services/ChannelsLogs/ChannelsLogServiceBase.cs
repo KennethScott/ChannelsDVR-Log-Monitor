@@ -1,9 +1,9 @@
-﻿using System.Text.RegularExpressions;
-using ChannelsDVR_Log_Monitor.Models;
+﻿using ChannelsDVR_Log_Monitor.Models;
 using ChannelsDVR_Log_Monitor.Models.Config;
 using ChannelsDVR_Log_Monitor.Services.Persistence;
 using Microsoft.Extensions.Options;
 using Serilog;
+using System.Text.RegularExpressions;
 
 namespace ChannelsDVR_Log_Monitor.Services.ChannelsLogs;
 
@@ -14,11 +14,12 @@ public abstract class ChannelsLogServiceBase(
 {
     public abstract Task InitializeAsync();
 
-    public event EventHandler<List<string>>? OnNewLogs;
+    public event EventHandler<NotificationEventArgs>? OnNewLogs;
 
     protected void RaiseOnNewLogs(List<string> logs)
     {
-        OnNewLogs?.Invoke(this, logs);
+        Log.Debug("Logs found matching rules.. alerting...");
+        OnNewLogs?.Invoke(this, new NotificationEventArgs(logs, "ChannelsDVR Log Alert"));
     }
 
     protected List<string> ParseLogs(string logRecords)
@@ -41,7 +42,7 @@ public abstract class ChannelsLogServiceBase(
 
             newLastProcessedLogId = log.Id;
 
-            foreach (var rule in appConfig.Value.AlertRules)
+            foreach (var rule in appConfig.Value.Logs.AlertRules)
             {
                 if (CheckConditions(log, rule))
                 {

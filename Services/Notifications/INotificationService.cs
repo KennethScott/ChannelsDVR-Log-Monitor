@@ -2,5 +2,5 @@
 
 public interface INotificationService
 {
-    Task SendNotificationAsync(string message);
+    Task SendNotificationAsync(string body, string? subject = null);
 }

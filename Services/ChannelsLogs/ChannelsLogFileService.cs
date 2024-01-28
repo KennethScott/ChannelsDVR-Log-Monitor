@@ -19,8 +19,8 @@ public class ChannelsLogFileService(
     {
         _fileWatcher = new FileSystemWatcher
         {
-            Path = Path.GetDirectoryName(appConfig.Value.LogFileWatcher.LogFilePath)!,
-            Filter = Path.GetFileName(appConfig.Value.LogFileWatcher.LogFilePath),
+            Path = Path.GetDirectoryName(appConfig.Value.Logs.FilePath)!,
+            Filter = Path.GetFileName(appConfig.Value.Logs.FilePath),
             NotifyFilter = NotifyFilters.LastWrite
         };
 
@@ -39,7 +39,7 @@ public class ChannelsLogFileService(
         try
         {
             using var fs = new FileStream(
-                appConfig.Value.LogFileWatcher.LogFilePath,
+                appConfig.Value.Logs.FilePath,
                 FileMode.Open,
                 FileAccess.Read,
                 FileShare.ReadWrite
@@ -74,7 +74,7 @@ public class ChannelsLogFileService(
         try
         {
             await using var fs = new FileStream(
-                appConfig.Value.LogFileWatcher.LogFilePath,
+                appConfig.Value.Logs.FilePath,
                 FileMode.Open,
                 FileAccess.Read,
                 FileShare.ReadWrite
