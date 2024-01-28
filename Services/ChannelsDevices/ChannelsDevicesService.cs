@@ -171,7 +171,11 @@ public class ChannelsDevicesService(
         }
 
         // Update the last sources
-        if (previousDevices?.Devices.Count == 0 || deviceChanges.Count > 0)
+        if (
+            previousDevices is null
+            || previousDevices.Devices.Count == 0
+            || deviceChanges.Count > 0
+        )
         {
             Log.Debug("Saving latest sources data");
             persistenceService.SaveValue(nameof(previousDevices), currentDevices);
