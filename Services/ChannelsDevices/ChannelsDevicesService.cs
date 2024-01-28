@@ -131,7 +131,15 @@ public class ChannelsDevicesService(
                     {
                         MaxDifferences = Int32.MaxValue,
                         IgnoreCollectionOrder = true,
-                        MembersToIgnore = [.. appConfig.Value.Devices.PropertiesToIgnore],
+                        MembersToIgnore =
+                            appConfig.Value.Devices.PropertiesToIgnore
+                            ??
+                            [
+                                "ChannelsDevice.DeviceAuth",
+                                "Channel.Favorite",
+                                "Channel.Hidden",
+                                "Channel.Enabled"
+                            ],
                         CollectionMatchingSpec = new()
                         {
                             { typeof(ChannelsDevice), ["FriendlyName"] },

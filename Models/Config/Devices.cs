@@ -6,6 +6,5 @@ public class Devices
 
     public int ApiPollingIntervalMinutes { get; set; } = 60;
 
-    public string[] PropertiesToIgnore { get; set; } =
-        ["ChannelsDevice.DeviceAuth", "Channel.Favorite", "Channel.Hidden", "Channel.Enabled"];
+    public List<string>? PropertiesToIgnore { get; set; } = null;
 }
