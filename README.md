@@ -29,7 +29,7 @@ A default copy appsettings.json is available in the root of this repository.  Si
 location, make the necessary changes, and mount it when you run the container, or run the container passing settings as environment variables. 
 
 There are really only 2 required settings as everything else will default:
-1.  Either specify the ChannelsBaseUrl manually, OR run docker in Host mode so it can automatically find the server via Bonjour.
+1.  Either specify the ChannelsDVRServerBaseUrl manually, OR run docker in Host mode so it can automatically find the server via Bonjour.
 1.  Your EmailSettings for notifications
 
 
