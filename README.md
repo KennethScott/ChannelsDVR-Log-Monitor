@@ -35,7 +35,7 @@ There are really only 2 required settings as everything else will default:
 
 #### Appsettings.json
 
-**ChannelsBaseUrl**: The ChannelsDVR server base URL <br/>
+**ChannelsDVRServerBaseUrl**: The ChannelsDVR server base URL <br/>
      Example: `http://XXX.XXX.XXX.XXX:8089
 
 **BonjourServiceName**: The service name being broadcast by the ChannelsDVR server via Bonjour. <br/>
