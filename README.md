@@ -56,6 +56,7 @@ in your ChannelsDVR server installation folder at /data/channels-dvr.log.
 
 **Logs.AlertRules**: array of rules to use for matching logs for alerting.  A single rule
   may contain a combination of StartsWith/Contains/NotContains/Regex.
+  Defaults to all [ERR] log entries and [DVR] log entries that start with "Error running job"
   1. **LogType**: The log record type (i.e. [ERR], [DVR], etc.)
   1. **StartsWith**: desired description starts with text
   1. **Contains**: desired description contains text
