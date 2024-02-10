@@ -1,8 +1,6 @@
 # ChannelsDVR Log Monitor
 
-### Simple log monitor with alerting for ChannelsDVR
-
-[![Docker Pulls](https://badgen.net/docker/pulls/kman0/channelsdvr-log-monitor?icon=docker&label=pulls)](https://hub.docker.com/r/kman0/channelsdvr-log-monitor/)
+### Simple log monitor with alerting for ChannelsDVR [![Docker Pulls](https://badgen.net/docker/pulls/kman0/channelsdvr-log-monitor?icon=docker&label=pulls)](https://hub.docker.com/r/kman0/channelsdvr-log-monitor/)
 
 This project is a containerized .NET8 cross-platform console application used to monitor ChannelsDVR logs. 
 The logs can be polled from the **log** endpoint, or read realtime from the filesystem (if accessible).
