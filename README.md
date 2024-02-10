@@ -63,10 +63,10 @@ in your ChannelsDVR server installation folder at /data/channels-dvr.log.
   1. **NotContains**: desired description does not contain text
   1. **Regex**: desired description matches regex pattern
 
-**Devices.ApiPollingIntervalMinutes**: The interval in minutes at which the log monitor polls for changes to devices/sources/channels. <br/>
+**Devices.ApiPollingIntervalMinutes**: The interval in minutes at which the monitor polls for changes to devices/sources/channels. <br/>
      Defaults to `60`    
 
-**Devices.ApiEndpoint**: The ChannelsDVR server log endpoint to monitor. <br/>
+**Devices.ApiEndpoint**: The ChannelsDVR server devices endpoint to monitor. <br/>
      Defaults to `/devices`
 
 **Devices.PropertiesToIgnore**: Optional list of Channel property names to ignore as to not be alerted if their values change.
