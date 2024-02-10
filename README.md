@@ -18,7 +18,7 @@ The app is also now capable of monitoring the **devices** endpoint to alert on d
 The application is [containerized](https://hub.docker.com/r/kman0/channelsdvr-log-monitor) and expects the user to mount an **appsettings.json** file
 for configuration, but settings may also be passed via environment variables.
 
-Optionally, you may also provide a mount for the logs (with appropriate write permissions) via `/app/logs`.
+Optionally, you may also provide a mount for the application's output logs (with appropriate write permissions) via `/app/logs` for review or diagnostic purposes.
 
 Example mount command:
 
